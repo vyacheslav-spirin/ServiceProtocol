@@ -5,7 +5,13 @@ namespace ServiceProtocol
 {
     public sealed class ServiceProtocolAwaiter<T> : ICriticalNotifyCompletion where T : ServiceProtocolResponse, new()
     {
+        public static readonly ServiceProtocolAwaiter<T> Instance = new ServiceProtocolAwaiter<T>();
+
         public bool IsCompleted => ServiceProtocolResponse.localThreadCodeForErrorResponses != ServiceProtocolResponseCode.Success;
+
+        private ServiceProtocolAwaiter()
+        {
+        }
 
         public void OnCompleted(Action continuation)
         {

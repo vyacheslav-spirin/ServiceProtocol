@@ -7,8 +7,6 @@ namespace Benchmark
     {
         private readonly ServiceProtocolClient client;
 
-        private readonly ServiceProtocolAwaiter<BenchmarkServiceProtocol.ProcessStringResponse> processStringAwaiter;
-
         internal ServiceProtocolClientConnectionState ConnectionState => client.ConnectionState;
 
         internal BenchmarkServiceApi()
@@ -16,8 +14,6 @@ namespace Benchmark
             var mgr = new ServiceProtocolClientManager(new SimpleConsoleErrorLogger());
 
             client = mgr.CreateClient(BenchmarkServiceProtocol.DataContract, 1000000);
-
-            processStringAwaiter = new ServiceProtocolAwaiter<BenchmarkServiceProtocol.ProcessStringResponse>();
         }
 
         internal void Connect(IPEndPoint remoteEndPoint)
@@ -32,7 +28,7 @@ namespace Benchmark
                 sourceString = sourceString
             });
 
-            return processStringAwaiter;
+            return ServiceProtocolAwaiter<BenchmarkServiceProtocol.ProcessStringResponse>.Instance;
         }
     }
 }
