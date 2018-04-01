@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>Service Protocol</title>
+    <authors>Vyacheslav Spirin</authors>
+    <owners>Vyacheslav Spirin</owners>
+    <licenseUrl>https://github.com/vyacheslav-spirin/ServiceProtocol/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/vyacheslav-spirin/ServiceProtocol</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>High-performance binary request-response protocol based on TCP allows you to easily configure the interaction of systems among themselves.</description>
+    <releaseNotes>First version of the Service Protocol.</releaseNotes>
+    <copyright>Copyright 2018 Vyacheslav Spirin</copyright>
+    <tags>network, client, server, protocol, async</tags>
+  </metadata>
+</package>
