@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/vyacheslav-spirin/ServiceProtocol</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>High-performance binary request-response protocol based on TCP allows you to easily configure the interaction of systems among themselves.</description>
-    <releaseNotes>First version of the Service Protocol.</releaseNotes>
+    <releaseNotes>Changed ServiceProtocolAwaiter usage approach.</releaseNotes>
     <copyright>Copyright 2018 Vyacheslav Spirin</copyright>
     <tags>network, client, server, protocol, async</tags>
   </metadata>
