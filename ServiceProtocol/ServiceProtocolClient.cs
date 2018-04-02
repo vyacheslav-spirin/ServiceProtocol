@@ -131,7 +131,7 @@ namespace ServiceProtocol
             });
         }
 
-        public void SendRequest(ServiceProtocolRequest request)
+        public ServiceProtocolAwaiter<T> SendRequest<T>(ServiceProtocolRequest request) where T : ServiceProtocolResponse, new()
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -143,12 +143,25 @@ namespace ServiceProtocol
             {
                 ServiceProtocolResponse.localThreadCodeForErrorResponses = ServiceProtocolResponseCode.RequestQueueOverflow;
 
-                return;
+                return ServiceProtocolAwaiter<T>.Instance;
             }
 
             ServiceProtocolResponse.localThreadCodeForErrorResponses = ServiceProtocolResponseCode.Success;
 
             request.id = requestIndex;
+
+            Thread.MemoryBarrier();
+
+            AddToSendQueue(request);
+
+            return ServiceProtocolAwaiter<T>.Instance;
+        }
+
+        public void SendRequestWithoutResponse(ServiceProtocolRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            request.id = ServiceProtocolDataContract.RequestIdWithoutResponse;
 
             Thread.MemoryBarrier();
 
@@ -437,7 +450,7 @@ namespace ServiceProtocol
 
                     packStream.Position = lastPos;
 
-                    request.id = uint.MaxValue;
+                    request.id = ServiceProtocolDataContract.RequestIdWithoutResponse;
 
                     goto AfterRequestPackError;
                 }
@@ -454,7 +467,7 @@ namespace ServiceProtocol
 
                     packStream.Position = lastPos;
 
-                    request.id = uint.MaxValue;
+                    request.id = ServiceProtocolDataContract.RequestIdWithoutResponse;
 
                     goto AfterRequestPackError;
                 }
@@ -472,7 +485,7 @@ namespace ServiceProtocol
 
                     packStream.Position = lastPos;
 
-                    request.id = uint.MaxValue;
+                    request.id = ServiceProtocolDataContract.RequestIdWithoutResponse;
 
                     goto AfterRequestPackError;
                 }
@@ -524,7 +537,7 @@ namespace ServiceProtocol
             for (var i = 0; i < currentRequestsCount; i++)
             {
                 var requestId = currentRequestIds[i];
-                if (requestId == uint.MaxValue) continue;
+                if (requestId == ServiceProtocolDataContract.RequestIdWithoutResponse) continue;
                 ProcessRequestError(requestId, ServiceProtocolResponseCode.ConnectionClosed, RequestStateBeforeSend);
             }
 
@@ -542,7 +555,7 @@ namespace ServiceProtocol
                 for (var i = 0; i < currentRequestsCount; i++)
                 {
                     var requestId = currentRequestIds[i];
-                    if (requestId == uint.MaxValue) continue;
+                    if (requestId == ServiceProtocolDataContract.RequestIdWithoutResponse) continue;
                     ProcessRequestError(requestId, ServiceProtocolResponseCode.ConnectionClosed, RequestStateBeforeSend);
                 }
             }
@@ -555,7 +568,7 @@ namespace ServiceProtocol
                     for (var i = 0; i < currentRequestsCount; i++)
                     {
                         var requestId = currentRequestIds[i];
-                        if (requestId == uint.MaxValue) continue;
+                        if (requestId == ServiceProtocolDataContract.RequestIdWithoutResponse) continue;
                         Interlocked.Exchange(ref requestStates[requestId], RequestStateAfterSend);
                     }
 
@@ -568,7 +581,7 @@ namespace ServiceProtocol
                     for (var i = 0; i < currentRequestsCount; i++)
                     {
                         var requestId = currentRequestIds[i];
-                        if (requestId == uint.MaxValue) continue;
+                        if (requestId == ServiceProtocolDataContract.RequestIdWithoutResponse) continue;
                         ProcessRequestError(requestId, ServiceProtocolResponseCode.ConnectionClosed, RequestStateBeforeSend);
                     }
                 }

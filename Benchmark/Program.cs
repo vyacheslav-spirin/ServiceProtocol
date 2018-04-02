@@ -62,7 +62,7 @@ namespace Benchmark
                 }
                 else
                 {
-                    benchmarkServer = new ServiceProtocolServer(BenchmarkServiceProtocol.DataContract, 6000, new SimpleConsoleErrorLogger());
+                    benchmarkServer = new ServiceProtocolServer(BenchmarkServiceProtocol.DataContract, 1000000, new SimpleConsoleErrorLogger());
 
                     benchmarkServer.SetHandler<BenchmarkServiceProtocol.ProcessStringRequest>(
                         request =>

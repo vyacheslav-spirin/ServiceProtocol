@@ -39,6 +39,8 @@ namespace ServiceProtocol
 
         internal const byte InternalProtocolRequestTypesCount = 1;
 
+        internal const uint RequestIdWithoutResponse = uint.MaxValue;
+
         internal readonly Dictionary<Type, RequestPackerInfo> requestPackers = new Dictionary<Type, RequestPackerInfo>();
         internal readonly Func<BinaryReader, ServiceProtocolRequest>[] requestUnpackers;
 

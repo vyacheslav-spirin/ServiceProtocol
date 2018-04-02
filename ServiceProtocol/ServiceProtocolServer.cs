@@ -270,6 +270,8 @@ namespace ServiceProtocol
                     logger.Fatal($"Service protocol server: Could not process response! Client: {socket.RemoteEndPoint} Details: {e}");
                 }
 
+                if (request.id == ServiceProtocolDataContract.RequestIdWithoutResponse) Interlocked.Decrement(ref connection.concurrentRequestsCount);
+
                 if (bytesAvailable == 0) goto ContinueReceive;
             }
 

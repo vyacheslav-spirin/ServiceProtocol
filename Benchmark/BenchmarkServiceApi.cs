@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using ServiceProtocol;
+using static Benchmark.BenchmarkServiceProtocol;
 
 namespace Benchmark
 {
@@ -13,7 +14,7 @@ namespace Benchmark
         {
             var mgr = new ServiceProtocolClientManager(new SimpleConsoleErrorLogger());
 
-            client = mgr.CreateClient(BenchmarkServiceProtocol.DataContract, 1000000);
+            client = mgr.CreateClient(DataContract, 1000000);
         }
 
         internal void Connect(IPEndPoint remoteEndPoint)
@@ -21,14 +22,12 @@ namespace Benchmark
             client.Connect(remoteEndPoint);
         }
 
-        internal ServiceProtocolAwaiter<BenchmarkServiceProtocol.ProcessStringResponse> ProcessString(string sourceString)
+        internal ServiceProtocolAwaiter<ProcessStringResponse> ProcessString(string sourceString)
         {
-            client.SendRequest(new BenchmarkServiceProtocol.ProcessStringRequest
+            return client.SendRequest<ProcessStringResponse>(new ProcessStringRequest
             {
                 sourceString = sourceString
             });
-
-            return ServiceProtocolAwaiter<BenchmarkServiceProtocol.ProcessStringResponse>.Instance;
         }
     }
 }

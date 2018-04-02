@@ -11,6 +11,16 @@ namespace ServiceProtocol
 
         internal const ushort MaxSize = ushort.MaxValue;
 
+        public bool IsWaitResponse
+        {
+            get
+            {
+                if (connection == null) throw new InvalidOperationException("Access denied!");
+
+                return id != ServiceProtocolDataContract.RequestIdWithoutResponse;
+            }
+        }
+
         [NonSerialized]
         internal uint id;
 
@@ -45,6 +55,8 @@ namespace ServiceProtocol
 
             if (connection == null) throw new InvalidOperationException("Access denied!");
 
+            if (id == ServiceProtocolDataContract.RequestIdWithoutResponse) throw new InvalidOperationException("This request is not associated with any response!");
+
             connection.Send(id, response);
             connection = null;
         }
@@ -53,6 +65,8 @@ namespace ServiceProtocol
         {
             if (connection == null) throw new InvalidOperationException("Access denied!");
 
+            if (id == ServiceProtocolDataContract.RequestIdWithoutResponse) throw new InvalidOperationException("This request is not associated with any response!");
+
             connection.Send(id, new ServiceProtocolInternalResponse {Code = ServiceProtocolResponseCode.RemoteServiceInternalError});
             connection = null;
         }
@@ -60,6 +74,8 @@ namespace ServiceProtocol
         public void SendServiceExternalError()
         {
             if (connection == null) throw new InvalidOperationException("Access denied!");
+
+            if (id == ServiceProtocolDataContract.RequestIdWithoutResponse) throw new InvalidOperationException("This request is not associated with any response!");
 
             connection.Send(id, new ServiceProtocolInternalResponse {Code = ServiceProtocolResponseCode.RemoteServiceExternalError});
             connection = null;
