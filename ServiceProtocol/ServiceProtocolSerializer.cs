@@ -40,6 +40,27 @@ namespace ServiceProtocol
             {
                 var arrayItemType = type.GetElementType();
 
+                if (arrayItemType == typeof(byte))
+                {
+                    gen.Emit(OpCodes.Ldarg_0);
+
+                    gen.Emit(OpCodes.Ldloc, localVar);
+
+                    gen.Emit(OpCodes.Ldlen);
+
+                    gen.Emit(OpCodes.Conv_I4);
+
+                    gen.Emit(OpCodes.Callvirt, typeof(BinaryWriter).GetMethod("Write", new[] {typeof(int)}));
+
+                    gen.Emit(OpCodes.Ldarg_0);
+
+                    gen.Emit(OpCodes.Ldloc, localVar);
+
+                    gen.Emit(OpCodes.Callvirt, typeof(BinaryWriter).GetMethod("Write", new[] {typeof(byte[])}));
+
+                    return;
+                }
+
                 var arrLengthLocal = freeLocals.GetFreeLocal(gen, typeof(int));
                 var arrIndex = freeLocals.GetFreeLocal(gen, typeof(int));
 
@@ -195,6 +216,19 @@ namespace ServiceProtocol
             if (type.IsArray)
             {
                 var arrayItemType = type.GetElementType();
+
+                if (arrayItemType == typeof(byte))
+                {
+                    gen.Emit(OpCodes.Ldarg_0);
+
+                    gen.Emit(OpCodes.Dup);
+
+                    gen.Emit(OpCodes.Callvirt, typeof(BinaryReader).GetMethod("ReadInt32", new Type[0]));
+
+                    gen.Emit(OpCodes.Callvirt, typeof(BinaryReader).GetMethod("ReadBytes", new[] {typeof(int)}));
+
+                    return;
+                }
 
                 var arrLocal = freeLocals.GetFreeLocal(gen, type);
                 var arrLengthLocal = freeLocals.GetFreeLocal(gen, typeof(int));
