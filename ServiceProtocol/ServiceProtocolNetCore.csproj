@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyVersion>1.4.34.0</AssemblyVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+    <AssemblyName>ServiceProtocol</AssemblyName>
+    <RootNamespace>ServiceProtocol</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="obj_net45\**" />
+    <EmbeddedResource Remove="obj_net45\**" />
+    <None Remove="obj_net45\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="ServiceProtocol.nuspec" />
+  </ItemGroup>
+</Project>

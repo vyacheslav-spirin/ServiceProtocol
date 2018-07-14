@@ -8,7 +8,7 @@ namespace ServiceProtocol
     {
         private readonly IServiceProtocolErrorLogger logger;
 
-        private readonly ushort keepAliveTimeoutMilliseconds;
+        private readonly ushort keepAliveMessageDelayMilliseconds;
 
         private readonly ushort connectionTimeoutMilliseconds;
 
@@ -16,11 +16,11 @@ namespace ServiceProtocol
 
         private uint lastId;
 
-        public ServiceProtocolClientManager(IServiceProtocolErrorLogger logger, ushort keepAliveTimeoutMilliseconds = 10000, ushort connectionTimeoutMilliseconds = 3000)
+        public ServiceProtocolClientManager(IServiceProtocolErrorLogger logger, ushort keepAliveMessageDelayMilliseconds = 10000, ushort connectionTimeoutMilliseconds = 3000)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            this.keepAliveTimeoutMilliseconds = keepAliveTimeoutMilliseconds;
+            this.keepAliveMessageDelayMilliseconds = keepAliveMessageDelayMilliseconds;
 
             this.connectionTimeoutMilliseconds = connectionTimeoutMilliseconds;
 
@@ -60,7 +60,7 @@ namespace ServiceProtocol
                         {
                             if (client.ConnectionState != ServiceProtocolClientConnectionState.Connected) continue;
 
-                            if (now - client.lastConnectionActiveTime > keepAliveTimeoutMilliseconds && !client.PingRequestInProgress) client.SendPing();
+                            if (now - client.lastConnectionActiveTime > keepAliveMessageDelayMilliseconds && !client.PingRequestInProgress) client.SendPing();
 
                             if (now - client.lastConnectionActiveTime > connectionTimeoutMilliseconds && client.PingRequestInProgress)
                             {

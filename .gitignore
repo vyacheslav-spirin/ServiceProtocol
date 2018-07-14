@@ -3,5 +3,6 @@
 /bin/
 
 **/obj/
+**/obj_net45/
 
 *.user

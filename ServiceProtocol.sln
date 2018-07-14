@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceProtocol", "ServiceP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benchmark.csproj", "{ECADF18F-A92C-402C-B5E5-107C1AC0B5F1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceProtocolNetCore", "ServiceProtocol\ServiceProtocolNetCore.csproj", "{DF238201-3855-4B53-B641-578412E06A79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{ECADF18F-A92C-402C-B5E5-107C1AC0B5F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECADF18F-A92C-402C-B5E5-107C1AC0B5F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECADF18F-A92C-402C-B5E5-107C1AC0B5F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF238201-3855-4B53-B641-578412E06A79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF238201-3855-4B53-B641-578412E06A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF238201-3855-4B53-B641-578412E06A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF238201-3855-4B53-B641-578412E06A79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
