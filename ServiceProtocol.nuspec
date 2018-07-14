@@ -15,7 +15,7 @@
     <tags>network, client, server, protocol, async, net45, netcoreapp2.0</tags>
   </metadata>
   <files>
-    <file src="bin\Release\net45\ServiceProtocol.dll" target="lib/net/net45/ServiceProtocol.dll"/>
-	<file src="bin\Release\netcoreapp2.0\ServiceProtocol.dll" target="lib/netcoreapp/netcoreapp2.0/ServiceProtocol.dll"/>
+    <file src="bin\Release\net45\ServiceProtocol.dll" target="lib\net45"/>
+	<file src="bin\Release\netcoreapp2.0\ServiceProtocol.dll" target="lib\netcoreapp2.0"/>
   </files>
 </package>
