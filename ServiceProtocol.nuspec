@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>ServiceProtocol</id>
-    <version>1.4.35</version>
+    <version>1.5.36</version>
     <title>Service Protocol</title>
     <authors>Vyacheslav Spirin</authors>
     <owners>Vyacheslav Spirin</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/vyacheslav-spirin/ServiceProtocol</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>High-performance binary request-response protocol based on TCP allows you to easily configure the interaction of systems among themselves.</description>
-    <releaseNotes>Added support .Net Core App 2.0. Changed argument name (keepAliveTimeoutMilliseconds -> keepAliveMessageDelayMilliseconds) in ServiceProtocolClientManager constructor.</releaseNotes>
+    <releaseNotes>Fixed enum fields serialization.</releaseNotes>
     <copyright>Copyright 2018 Vyacheslav Spirin</copyright>
     <tags>network, client, server, protocol, async, net45, netcoreapp2.0</tags>
   </metadata>

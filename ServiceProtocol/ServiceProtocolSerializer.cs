@@ -32,7 +32,7 @@ namespace ServiceProtocol
             return packMethod.CreateDelegate(delegateType);
         }
 
-        internal static void AddPackCode(ILGenerator gen, LocalBuilder localVar, Dictionary<Type, Stack<LocalBuilder>> freeLocals)
+        private static void AddPackCode(ILGenerator gen, LocalBuilder localVar, Dictionary<Type, Stack<LocalBuilder>> freeLocals)
         {
             var type = localVar.LocalType;
 
@@ -94,6 +94,8 @@ namespace ServiceProtocol
                 if (IsAvailableDirectWriteAndRead(arrayItemType))
                 {
                     if (arrayItemType == typeof(IntPtr) || arrayItemType == typeof(UIntPtr)) throw new Exception($"Could not pack \"{arrayItemType}\" type!");
+
+                    if (arrayItemType.IsEnum) arrayItemType = Enum.GetUnderlyingType(arrayItemType);
 
                     var writeMethod = typeof(BinaryWriter).GetMethod("Write", new[] {arrayItemType});
                     if (writeMethod == null) throw new Exception($"Could not find {nameof(BinaryWriter)} write method by type \"{arrayItemType}\"!");
@@ -167,6 +169,8 @@ namespace ServiceProtocol
                 if (IsAvailableDirectWriteAndRead(fieldType))
                 {
                     if (fieldType == typeof(IntPtr) || fieldType == typeof(UIntPtr)) throw new Exception($"Could not pack \"{fieldType}\" type!");
+
+                    if (fieldType.IsEnum) fieldType = Enum.GetUnderlyingType(fieldType);
 
                     var writeMethod = typeof(BinaryWriter).GetMethod("Write", new[] {fieldType});
                     if (writeMethod == null) throw new Exception($"Could not find {nameof(BinaryWriter)} write method by type \"{fieldType}\"!");
@@ -267,6 +271,8 @@ namespace ServiceProtocol
                 {
                     if (arrayItemType == typeof(IntPtr) || arrayItemType == typeof(UIntPtr)) throw new Exception($"Could not unpack \"{arrayItemType}\" type!");
 
+                    if (arrayItemType.IsEnum) arrayItemType = Enum.GetUnderlyingType(arrayItemType);
+
                     var readMethod = typeof(BinaryReader).GetMethod("Read" + arrayItemType.Name, new Type[0]);
                     if (readMethod == null) throw new Exception($"Could not find {nameof(BinaryReader)} read method by type \"{arrayItemType}\"!");
 
@@ -349,8 +355,10 @@ namespace ServiceProtocol
                 {
                     if (fieldType == typeof(IntPtr) || fieldType == typeof(UIntPtr)) throw new Exception($"Could not unpack \"{fieldType}\" type!");
 
-                    var readMethod = typeof(BinaryReader).GetMethod("Read" + field.FieldType.Name, new Type[0]);
-                    if (readMethod == null) throw new Exception($"Could not find {nameof(BinaryReader)} read method by type \"{field.FieldType}\"!");
+                    if (fieldType.IsEnum) fieldType = Enum.GetUnderlyingType(fieldType);
+
+                    var readMethod = typeof(BinaryReader).GetMethod("Read" + fieldType.Name, new Type[0]);
+                    if (readMethod == null) throw new Exception($"Could not find {nameof(BinaryReader)} read method by type \"{fieldType}\"!");
 
                     gen.Emit(OpCodes.Ldarg_0);
 
@@ -376,7 +384,7 @@ namespace ServiceProtocol
 
         private static bool IsAvailableDirectWriteAndRead(Type type)
         {
-            return type.IsPrimitive || type == typeof(string) || type == typeof(decimal);
+            return type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type.IsEnum;
         }
 
         private static LocalBuilder GetFreeLocal(this Dictionary<Type, Stack<LocalBuilder>> freeLocals, ILGenerator gen, Type type)
