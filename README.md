@@ -13,12 +13,12 @@ Working with .NET / Mono 4.5. For building required Visual Studio 2017.
 
 ## Features:
 
- * It can work with messages of any format. For each request / response type, the packing / unpacking code is generated just one time and further used for all data transmission.
- * It supports pipelining. Using one connection, multiple requests can be sent. The protocol tries to pack the maximum amount of data before calling the socket methods.
- * It quickly detects connection problems, sending own keepalive messages.
- * It uses **async / await** approach for receive response from the server.
- * It fully support **Mono**.
- * It contains simple overload control. Drop client connection when the limit of concurrent requests is exceeded on the server. Return error when limit exceeded on the client. This mechanism allows to avoid client and server application hangup during overload.
+ * Can work with messages of any format. For each request / response type, the packing / unpacking code is generated just one time and further used for all data transmission.
+ * Supports pipelining. Using one connection, multiple requests can be sent. The protocol tries to pack the maximum amount of data before calling the socket methods.
+ * Quickly detects connection problems, sending own keepalive messages.
+ * Uses **async / await** approach for receive response from the server.
+ * Fully supports **Mono**.
+ * Contains simple overload control. Drops client connection when the limit of concurrent requests is exceeded on the server. If limit on the client is exceeded, service protocol will return an error. This mechanism allows to avoid client and server application hangup during overload.
 
 ### Quickstart
 
@@ -53,9 +53,9 @@ public static class ExampleServiceProtocolSchema
 }
 ```
 
-Pay attention to the line with ```DataContract``` object. The ```ServiceProtocolDataContract``` class generates the code for packing and unpacking the data. This object required for creating clients and servers. It is recommended to cache this object and pass it to all clients and servers who use the same schema, in order not to generate the same code once again.
+Pay attention to the line with ```DataContract``` object: the ```ServiceProtocolDataContract``` class generates a code for packing and unpacking data. This object is required for creating clients and servers. It is recommended to cache this object and to pass it to all clients and servers who use the same schema, in order not to generate the same code once again.
 
-For the client and server, you need a logger to send errors. Create a simple console logger:
+For the client and the server, you need to have a logger to send errors. Create a simple console logger:
 
 ```cs
 using System;
@@ -79,7 +79,7 @@ Create client:
 
 ```cs
 //ServiceProtocolClientManager contains background thread for managing connections.
-//Recommended create of one instance of this class for the whole application.
+//You shall to create one of instance of this class for the whole application.
 var mgr = new ServiceProtocolClientManager(new SimpleConsoleErrorLogger());
 
 //Arguments: data contract and max concurrent request count
@@ -87,7 +87,7 @@ var client = mgr.CreateClient(ExampleServiceProtocolSchema.DataContract, 10000);
 
 client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 11000));
 ```
-The design of the library implies sending requests and getting response inside asynchronous methods. **Each call** of ```SendRequest``` method **must** be accompanied by **await** keyword. When using **await** keyword, the compiler generates a callback code that calls the methods necessary for the correct client logic work.
+The design of the library implies sending requests and getting response inside asynchronous methods. **Each call** of ```SendRequest``` method **must** be accompanied by **await** keyword. When using **await** keyword, the compiler generates a callback code that calls the methods which are needed for the correct client's logic work.
 
 ```cs
 public async void ExampleProcessString()
@@ -137,7 +137,7 @@ server.Listen(11000);
 ```
 
 ## **Important!!!**
-If the client sends a request and waits for a response, then the server must return the response. Otherwise, the request queue on the client and server will be full and further processing will be impossible. The ```ServiceProtocolRequest``` class provides an auxiliary property ```IsWaitResponse``` to determine whether the client wait a response. The client provides a method ```SendRequestWithoutResponse```, but the main focus in the library is on getting a response from the server. If you do not plan to use method ```SendRequestWithoutResponse```, you can not use the property ```IsWaitResponse``` and always send a response.
+If the client sends a request and waits for a response, then the server must return the response. Otherwise, the request queue on the client and server will be full and further processing will be impossible. The ```ServiceProtocolRequest``` class provides an auxiliary property ```IsWaitResponse``` to determine whether the client wait a response. The client provides a method ```SendRequestWithoutResponse```, but the main focus in the library is on getting a response from the server. If you do not plan to use method ```SendRequestWithoutResponse```, you don't have to use the property ```IsWaitResponse``` and always send a response.
 
 
 ### MIT License
